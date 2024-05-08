@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+model Examen {
+  id    Int     @id @default(autoincrement())
+  descricion String?
+  insumoevaluacion  InsumoEvaluacion[] 
+}
+
+model Pregunta {
+  id        Int     @id @default(autoincrement())
+  pregunta     String
+  categoria   String?
+  respuestacorrecta Boolean @default(false)
+  insumoevaluacion  InsumoEvaluacion[] 
+}
+
+
+
+model InsumoEvaluacion{
+  id            Int     @id @default(autoincrement())
+  pregunta      Pregunta @relation(fields: [preguntaid], references: [id]) // Este es el primer error
+  preguntaid    Int
+  examen        Examen   @relation(fields: [examenID], references: [id])
+  examenID      Int
+  valor         Int
+  Estado        Boolean @default(false)
+}
+ 
