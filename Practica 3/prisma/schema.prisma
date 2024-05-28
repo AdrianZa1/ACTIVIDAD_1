@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+  
+}
+model Examen {
+  id    Int     @id @default(autoincrement())
+  descricion String?
+  insumoevaluacion  InsumoEvaluacion[] 
+  estado String @default("Activo")
+}
+
+model Pregunta {
+  id        Int     @id @default(autoincrement())
+  pregunta     String
+  categoria   String?
+  respuestacorrecta Boolean @default(false)
+  insumoevaluacion  InsumoEvaluacion[] 
+  estado String @default("Activo")
+}
+
+
+
+model InsumoEvaluacion{
+  id            Int     @id @default(autoincrement())
+  pregunta      Pregunta @relation(fields: [preguntaid], references: [id]) // Este es el primer error
+  preguntaid    Int
+  examen        Examen   @relation(fields: [examenID], references: [id])
+  examenID      Int
+  valor         Int
+  estado String @default("Activo")
+}
