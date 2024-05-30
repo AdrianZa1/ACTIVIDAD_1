@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model Auditoria {
+  id          Int      @id @default(autoincrement())
+  entidad     String
+  detalle     String?
+  fecha       DateTime
+  id_auditoria Int?
+  estado      String   @default("Activo")
+}
+
+model Examen {
+  id               Int                @id @default(autoincrement())
+  descripcion      String?
+  insumoevaluacion InsumoEvaluacion[]
+  estado           String             @default("Activo")
+}
+
+model Pregunta {
+  id               Int                @id @default(autoincrement())
+  pregunta         String
+  categoria        String?
+  respuestacorrecta Boolean           @default(false)
+  insumoevaluacion InsumoEvaluacion[]
+  estado           String             @default("Activo")
+}
+
+model InsumoEvaluacion {
+  id            Int       @id @default(autoincrement())
+  pregunta      Pregunta  @relation(fields: [preguntaid], references: [id])
+  preguntaid    Int
+  examen        Examen    @relation(fields: [examenID], references: [id])
+  examenID      Int
+  valor         Int
+  estado        String    @default("Activo")
+}
